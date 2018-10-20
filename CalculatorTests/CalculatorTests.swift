@@ -66,6 +66,62 @@ class CalculatorTests: XCTestCase {
         let err = inputString("123456789012345", withInitialValue: 0)
         XCTAssertTrue(err == .inputOverflow)
     }
+    
+    // MARK: 00入力
+    // private func inputString は入力を分解してしまうのでここでは使わない
+    func testInputDoubleZero() {
+        var err = inputString("123", withInitialValue: 0)
+        XCTAssertTrue(err == .noError)
+        XCTAssertTrue(calculator?.displayString() == "123")
+        XCTAssertTrue(calculator?.doubleValue() == 123)
+        
+        err = calculator!.input(text: "00")
+        XCTAssertTrue(err == .noError)
+        XCTAssertTrue(calculator?.displayString() == "12,300")
+        XCTAssertTrue(calculator?.doubleValue() == 12300)
+
+    }
+    
+    func testInputOverflowDoubleZero() { // 一桁も入らないケース
+        var err = inputString("12345678901234", withInitialValue: 0)
+        XCTAssertTrue(err == .noError)
+        XCTAssertTrue(calculator?.displayString() == "12,345,678,901,234")
+        XCTAssertTrue(calculator?.doubleValue() == 12345678901234)
+        
+        err = calculator!.input(text: "00")
+        XCTAssertTrue(err == .inputOverflow)
+        XCTAssertTrue(calculator?.displayString() == "12,345,678,901,234")
+        XCTAssertTrue(calculator?.doubleValue() == 12345678901234)
+    }
+    
+    func testInputOverflowDoubleZero2() { // 一桁だけ入るケース
+        var err = inputString("1234567890123", withInitialValue: 0)
+        XCTAssertTrue(err == .noError)
+        XCTAssertTrue(calculator?.displayString() == "1,234,567,890,123")
+        XCTAssertTrue(calculator?.doubleValue() == 1234567890123)
+        
+        err = calculator!.input(text: "00")
+        XCTAssertTrue(err == .noError)
+        XCTAssertTrue(calculator?.displayString() == "12,345,678,901,230")
+        XCTAssertTrue(calculator?.doubleValue() == 12345678901230)
+    }
+    
+    func testInputDobuleZeroForFraction() {
+        var err = inputString("123.", withInitialValue: 0)
+        XCTAssertTrue(err == .noError)
+        XCTAssertTrue(calculator?.displayString() == "123.")
+        XCTAssertTrue(calculator?.doubleValue() == 123)
+        
+        err = calculator!.input(text: "00")
+        XCTAssertTrue(err == .noError)
+        XCTAssertTrue(calculator?.displayString() == "123.00")
+        XCTAssertTrue(calculator?.doubleValue() == 123)
+
+        err = calculator!.input(text: "1")
+        XCTAssertTrue(err == .noError)
+        XCTAssertTrue(calculator?.displayString() == "123.001")
+        XCTAssertTrue(calculator?.doubleValue() == 123.001)
+    }
 
     // MARK: 演算
     func testPlus() {
