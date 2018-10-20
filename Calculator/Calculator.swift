@@ -123,9 +123,6 @@ class Calculator {
         } else {
             if lastOperator == nil { // 演算中ではない
                 lastValue = value // 現在の値を計算対象にする
-                if valueString.last == period { // 末尾にピリオドがあるときは削除
-                    valueString.removeLast()
-                }
             } else { // 演算中
                 switch lastOperator { // 計算対象となる値を更新
                 case "+":
@@ -144,13 +141,25 @@ class Calculator {
                     throw CalculateError.negativeValue
                 }
                 valueString = String(format:"%f", lastValue) // 表示用の値を更新
-                
-                let comps = valueString.components(separatedBy: ".")
-                if comps[0].count > maximumIntegerDigits {
-                    reset()
-                    throw CalculateError.calculateOverflow
-                } else if comps.count == 2 && Int(comps[1]) == 0 { // 小数点以下が0のときは削除
-                    valueString.removeSubrange(valueString.index(valueString.endIndex, offsetBy: -comps[1].count - 1)..<valueString.endIndex)
+            }
+            
+            let comps = valueString.components(separatedBy: ".")
+            if comps[0].count > maximumIntegerDigits {// 整数部分がオーバーフロー
+                reset()
+                throw CalculateError.calculateOverflow
+            } else if comps.count == 2 { // 小数点あり
+                var fraction = comps[1] // 少数部分
+                for c in comps[1].reversed() { // 小数点以下の末尾の0を削除
+                    if c == "0" {
+                        fraction.removeLast()
+                    } else {
+                        break
+                    }
+                }
+                valueString = comps[0] // 整数部分
+                if fraction.count > 0 { // 小数点以下が0ではない
+                    valueString.append(".")
+                    valueString.append(fraction) // 少数部分を付加
                 }
             }
         }

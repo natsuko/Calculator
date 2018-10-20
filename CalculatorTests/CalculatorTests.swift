@@ -383,6 +383,145 @@ class CalculatorTests: XCTestCase {
         XCTAssertTrue(calculator?.doubleValue() == 200)
     }
     
+    // MARK: 小数点
+    func testFraction() {
+        let err = inputString("4.2", withInitialValue: 0)
+        XCTAssertTrue(err == .noError)
+        XCTAssertTrue(calculator?.displayString() == "4.2")
+        XCTAssertTrue(calculator?.doubleValue() == 4.2)
+
+    }
+    
+    func testFractionInputOverflow() {
+        let err = inputString("4.2345678", withInitialValue: 0)
+        XCTAssertTrue(err == .inputOverflow)
+        XCTAssertTrue(calculator?.displayString() == "4.234")
+        XCTAssertTrue(calculator?.doubleValue() == 4.234)
+    }
+
+    func testStartWithPeriod() {
+        var err = inputString(".", withInitialValue: 0)
+        XCTAssertTrue(err == .noError)
+        XCTAssertTrue(calculator?.displayString() == "0.")
+        XCTAssertTrue(calculator?.doubleValue() == 0)
+
+        err = inputString("2")
+        XCTAssertTrue(err == .noError)
+        XCTAssertTrue(calculator?.displayString() == "0.2")
+        XCTAssertTrue(calculator?.doubleValue() == 0.2)
+
+    }
+    
+    func testStartWithPeriodWithInitialValue() {
+        var err = inputString(".", withInitialValue: 100)
+        XCTAssertTrue(err == .noError)
+        XCTAssertTrue(calculator?.displayString() == "0.")
+        XCTAssertTrue(calculator?.doubleValue() == 0)
+        
+        err = inputString("2")
+        XCTAssertTrue(err == .noError)
+        XCTAssertTrue(calculator?.displayString() == "0.2")
+        XCTAssertTrue(calculator?.doubleValue() == 0.2)
+        
+    }
+    
+    func testInputDoublePeriod() {
+        var err = inputString("3.", withInitialValue: 0)
+        XCTAssertTrue(err == .noError)
+        XCTAssertTrue(calculator?.displayString() == "3.")
+        XCTAssertTrue(calculator?.doubleValue() == 3)
+        
+        err = inputString(".")
+        XCTAssertTrue(err == .noError)
+        XCTAssertTrue(calculator?.displayString() == "3.")
+        XCTAssertTrue(calculator?.doubleValue() == 3)
+    }
+    
+    func testStartWithDoublePeriod() {
+        var err = inputString(".", withInitialValue: 0)
+        XCTAssertTrue(err == .noError)
+        XCTAssertTrue(calculator?.displayString() == "0.")
+        XCTAssertTrue(calculator?.doubleValue() == 0)
+        
+        err = inputString(".")
+        XCTAssertTrue(err == .noError)
+        XCTAssertTrue(calculator?.displayString() == "0.")
+        XCTAssertTrue(calculator?.doubleValue() == 0)
+        
+        err = inputString("5")
+        XCTAssertTrue(err == .noError)
+        XCTAssertTrue(calculator?.displayString() == "0.5")
+        XCTAssertTrue(calculator?.doubleValue() == 0.5)
+    }
+    
+    func testInputPeriodAfterOperator() {
+        var err = inputString("10+", withInitialValue: 0)
+        XCTAssertTrue(err == .noError)
+        XCTAssertTrue(calculator?.displayString() == "10")
+        XCTAssertTrue(calculator?.doubleValue() == 10)
+        
+        err = inputString(".")
+        XCTAssertTrue(err == .noError)
+        XCTAssertTrue(calculator?.displayString() == "0.")
+        XCTAssertTrue(calculator?.doubleValue() == 0)
+        
+        err = inputString("5")
+        XCTAssertTrue(err == .noError)
+        XCTAssertTrue(calculator?.displayString() == "0.5")
+        XCTAssertTrue(calculator?.doubleValue() == 0.5)
+        
+        err = inputString("=")
+        XCTAssertTrue(err == .noError)
+        XCTAssertTrue(calculator?.displayString() == "10.5")
+        XCTAssertTrue(calculator?.doubleValue() == 10.5)
+        
+    }
+    
+    func testFractionInputZero() {
+        var err = inputString("10.", withInitialValue: 0)
+        XCTAssertTrue(err == .noError)
+        XCTAssertTrue(calculator?.displayString() == "10.")
+        XCTAssertTrue(calculator?.doubleValue() == 10)
+        
+        err = inputString("0")
+        XCTAssertTrue(err == .noError)
+        XCTAssertTrue(calculator?.displayString() == "10.0")
+        XCTAssertTrue(calculator?.doubleValue() == 10)
+        
+        err = inputString("1")
+        XCTAssertTrue(err == .noError)
+        XCTAssertTrue(calculator?.displayString() == "10.01")
+        XCTAssertTrue(calculator?.doubleValue() == 10.01)
+        
+        err = inputString("=")
+        XCTAssertTrue(err == .noError)
+        XCTAssertTrue(calculator?.displayString() == "10.01")
+        XCTAssertTrue(calculator?.doubleValue() == 10.01)
+    }
+    
+    func testFractionInputEndOfZero() {
+        var err = inputString("10.", withInitialValue: 0)
+        XCTAssertTrue(err == .noError)
+        XCTAssertTrue(calculator?.displayString() == "10.")
+        XCTAssertTrue(calculator?.doubleValue() == 10)
+        
+        err = inputString("0")
+        XCTAssertTrue(err == .noError)
+        XCTAssertTrue(calculator?.displayString() == "10.0")
+        XCTAssertTrue(calculator?.doubleValue() == 10)
+        
+        err = inputString("0")
+        XCTAssertTrue(err == .noError)
+        XCTAssertTrue(calculator?.displayString() == "10.00")
+        XCTAssertTrue(calculator?.doubleValue() == 10)
+        
+        err = inputString("=")
+        XCTAssertTrue(err == .noError)
+        XCTAssertTrue(calculator?.displayString() == "10")
+        XCTAssertTrue(calculator?.doubleValue() == 10)
+    }
+    
+
   
     func testPerformanceExample() {
         // This is an example of a performance test case.
