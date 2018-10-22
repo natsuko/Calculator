@@ -528,8 +528,8 @@ class CalculatorTests: XCTestCase {
         
         err = inputString("=")
         XCTAssertTrue(err == .noError)
-        XCTAssertTrue(calculator?.displayString() == "10.5")
-        XCTAssertTrue(calculator?.doubleValue() == 10.5)
+        XCTAssertTrue(calculator?.displayString() == "10")
+        XCTAssertTrue(calculator?.doubleValue() == 10)
         
     }
     
@@ -551,8 +551,8 @@ class CalculatorTests: XCTestCase {
         
         err = inputString("=")
         XCTAssertTrue(err == .noError)
-        XCTAssertTrue(calculator?.displayString() == "10.01")
-        XCTAssertTrue(calculator?.doubleValue() == 10.01)
+        XCTAssertTrue(calculator?.displayString() == "10")
+        XCTAssertTrue(calculator?.doubleValue() == 10)
     }
     
     func testFractionInputEndOfZero() {

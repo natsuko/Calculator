@@ -27,6 +27,7 @@ class Calculator {
     private var formatter:NumberFormatter
     private let maximumIntegerDigits:Int
     private let maximumFractionDigits:Int
+    private let maximumCalculatedFractionDigits:Int
     private let negativeEnabled:Bool
     
     var valueString:String // 表示される値の文字列
@@ -38,6 +39,7 @@ class Calculator {
         
         maximumIntegerDigits = 14
         maximumFractionDigits = 3
+        maximumCalculatedFractionDigits = 0
         negativeEnabled = false
         
         formatter = NumberFormatter()
@@ -140,9 +142,12 @@ class Calculator {
                     reset()
                     throw CalculateError.negativeValue
                 }
-                valueString = String(format:"%f", lastValue) // 表示用の値を更新
             }
-            
+
+            let fractionBase = pow(10.0, Double(maximumCalculatedFractionDigits))
+            lastValue = floor(lastValue * fractionBase) / fractionBase
+            valueString = String(format:"%f", lastValue) // 表示用の値を更新
+
             let comps = valueString.components(separatedBy: ".")
             if comps[0].count > maximumIntegerDigits {// 整数部分がオーバーフロー
                 reset()
