@@ -487,6 +487,23 @@ class CalculatorTests: XCTestCase {
         XCTAssertTrue(calculator?.displayString() == "3.")
         XCTAssertTrue(calculator?.doubleValue() == 3)
         
+        err = inputString("2")
+        XCTAssertTrue(err == .noError)
+        XCTAssertTrue(calculator?.displayString() == "3.2")
+        XCTAssertTrue(calculator?.doubleValue() == 3.2)
+        
+        err = inputString(".")
+        XCTAssertTrue(err == .noError)
+        XCTAssertTrue(calculator?.displayString() == "3.2")
+        XCTAssertTrue(calculator?.doubleValue() == 3.2)
+    }
+    
+    func testInputContinuousPeriod() {
+        var err = inputString("3.", withInitialValue: 0)
+        XCTAssertTrue(err == .noError)
+        XCTAssertTrue(calculator?.displayString() == "3.")
+        XCTAssertTrue(calculator?.doubleValue() == 3)
+        
         err = inputString(".")
         XCTAssertTrue(err == .noError)
         XCTAssertTrue(calculator?.displayString() == "3.")
@@ -577,8 +594,27 @@ class CalculatorTests: XCTestCase {
         XCTAssertTrue(calculator?.doubleValue() == 10)
     }
     
+    func testDividedByZero() {
+        let err = inputString("0/0=", withInitialValue: 0)
+        XCTAssertTrue(err == .noError)
+        XCTAssertTrue(calculator?.displayString() == "0")
+        XCTAssertTrue(calculator?.doubleValue() == 0)
+        
+    }
+    
+    func testClear() {
+        var err = inputString("1+2=", withInitialValue: 0)
+        XCTAssertTrue(err == .noError)
+        XCTAssertTrue(calculator?.displayString() == "3")
+        XCTAssertTrue(calculator?.doubleValue() == 3)
 
-  
+        err = inputString("C")
+        XCTAssertTrue(err == .noError)
+        XCTAssertTrue(calculator?.displayString() == "0")
+        XCTAssertTrue(calculator?.doubleValue() == 0)
+    }
+    
+ 
     func testPerformanceExample() {
         // This is an example of a performance test case.
         self.measure {

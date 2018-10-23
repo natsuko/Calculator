@@ -132,7 +132,7 @@ class Calculator {
                 case "-":
                     lastValue -= value
                 case "/":
-                    lastValue /= value
+                    lastValue = value != 0 ? lastValue / value : 0
                 case "*":
                     lastValue *= value
                 default:
