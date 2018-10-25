@@ -25,22 +25,22 @@ class Calculator {
     private let period:Character = "."
     
     private var formatter:NumberFormatter
-    private let maximumIntegerDigits:Int
-    private let maximumFractionDigits:Int
-    private let maximumCalculatedFractionDigits:Int
-    private let negativeEnabled:Bool
+    private let maximumIntegerDigits:Int            // 整数部分の最大桁数（入力・演算結果）
+    private let maximumFractionDigits:Int           // 小数部分の最大桁数（入力時）
+    private let maximumCalculatedFractionDigits:Int // 小数部分の最大桁数（演算結果→切り捨て）
+    private let negativeEnabled:Bool                // 負の数を許容するか
     
-    var valueString:String // 表示される値の文字列
-    var lastValue:Double // 前回入力された演算対象の値
-    var lastOperator:Character? // 前回入力された演算子
-    var continueToInput:Bool // 数字の入力を継続するかどうか
+    private var valueString:String // 表示される値の文字列
+    private var lastValue:Double // 前回入力された演算対象の値
+    private var lastOperator:Character? // 前回入力された演算子
+    private var continueToInput:Bool // 数字の入力を継続するかどうか
     
     init() {
         
-        maximumIntegerDigits = 14
-        maximumFractionDigits = 3
-        maximumCalculatedFractionDigits = 0
-        negativeEnabled = false
+        maximumIntegerDigits = 14 // 整数部 max14桁
+        maximumFractionDigits = 3 // 小数部入力 max3桁
+        maximumCalculatedFractionDigits = 0 // 演算結果は整数にする（小数部を切り捨てる）
+        negativeEnabled = false // 負の数は許容しない
         
         formatter = NumberFormatter()
         formatter.numberStyle = .decimal
@@ -57,14 +57,14 @@ class Calculator {
         self.valueString = String(format:"%ld", value)
     }
     
-    func reset() {
+    private func reset() {
         valueString = "0"
         lastValue = 0
         lastOperator = nil
         continueToInput = false
     }
     
-    func inputDigit(_ t:String) -> Bool{
+    private func inputDigit(_ t:String) -> Bool{
         let digit = Character(t)
         guard digits.contains(digit) else {
             return false
@@ -87,7 +87,7 @@ class Calculator {
         return true
     }
     
-    func inputDoubleZero() -> Bool{
+    private func inputDoubleZero() -> Bool{
         if inputDigit("0") {
             _ = inputDigit("0") // 2つ目のゼロは入力できなくてもエラーにはしない
             return true
@@ -96,7 +96,7 @@ class Calculator {
         }
     }
     
-    func inputPeriod() {
+    private func inputPeriod() {
         if !continueToInput {
             // 非入力モードでピリオドが最初に入力されたら"0."になる
             valueString = "0"
@@ -109,11 +109,11 @@ class Calculator {
         }
     }
     
-    func inputClear() {
+    private func inputClear() {
         reset()
     }
     
-    func calculate(_ t:String) throws {
+    private func calculate(_ t:String) throws {
         let inputOperator = Character(t)
         guard operators.contains(Character(t)) else {
             throw CalculateError.fatal
@@ -220,7 +220,10 @@ class Calculator {
     }
     
     func intValue() -> Int {
-        
         return Int(floor(doubleValue()))
+    }
+    
+    func inOperation() -> Bool {
+        return lastOperator != nil
     }
 }

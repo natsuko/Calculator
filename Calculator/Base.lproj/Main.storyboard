@@ -307,6 +307,7 @@
                     </view>
                     <connections>
                         <outlet property="displayTextField" destination="wgX-lV-snL" id="ue8-sX-hW2"/>
+                        <outlet property="equalButton" destination="Ksl-60-t0P" id="JDC-zW-dU8"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

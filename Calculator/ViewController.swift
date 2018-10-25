@@ -14,11 +14,11 @@ class ViewController: UIViewController {
     private var calculator:Calculator!
 
     @IBOutlet weak var displayTextField: UITextField!
+    @IBOutlet weak var equalButton: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        
       
         calculator = Calculator(intValue: Int(arc4random() % 9))
         displayTextField.text = calculator.displayString()
@@ -45,13 +45,17 @@ class ViewController: UIViewController {
             message = "これ以上入力できません。"
         }
         displayTextField.text = calculator.displayString()
+        updateButtonView(calculator.inOperation())
         
         if message != nil {
             let alertController = UIAlertController(title: nil, message: message, preferredStyle: .alert)
             alertController.addAction(UIAlertAction.init(title: "OK", style: .default, handler: nil))
             self.present(alertController, animated: true, completion: nil)
         }
-
+    }
+    
+    private func updateButtonView(_ inOperation:Bool) {
+        equalButton.backgroundColor = inOperation ? UIColor.black : UIColor.darkGray
     }
 }
 
